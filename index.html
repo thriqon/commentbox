@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" type="text/css" />
+		<script src="//code.jquery.com/jquery.min.js" type="text/javascript"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/ember.js/1.1.2/ember.min.js"></script>
+		<meta charset="utf-8">
+		<title>CommentBox</title>
+	</head>
+	<body>
+		<script type="text/x-handlebars" data-template-name="application">
+			<div class="container">
+				<h1>CommentBox</h1> 
+				<fieldset>
+					<legend>Parameter</legend>
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="override">Width</label>
+							<div class="col-sm-10">
+								{{input class="form-control" type="number" id="override" min="0" step="1" value=override}}   
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="character">Comment Character</label>
+							<div class="col-sm-10">
+								{{input class="form-control" type="text" id="character" value=character}}
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="text">Comments</label>
+							<div class="col-sm-10">
+								{{textarea class="form-control" value=text id="text"}}
+							</div>
+						</div>
+					</form>
+				</fieldset>
+
+				<fieldset>
+					<legend>Output</legend>
+					<pre>{{styleA}}</pre>
+					<pre>{{styleB}}</pre>
+				</fieldset>
+			</div>
+		</script>
+
+		<div style="position: absolute; bottom: 5px; right: 10px"><iframe src="http://ghbtns.com/github-btn.html?user=thriqon&type=follow"
+				allowtransparency="true" frameborder="0" scrolling="0" width="132" height="20"></iframe>
+		</div>
+		<script type="text/javascript">
+			var App = Ember.Application.create();
+
+			function characterRepeatedTimes (times, char) {
+				return Array(times + 1).join(char).slice(0, times + char.length);
+			}
+
+			function min(a,b) {
+				return a < b ? a : b; 
+			}
+
+			App.ApplicationController = Ember.Controller.extend({
+				override : localStorage.override,
+				overrideChanged : function () {
+					localStorage.override = this.get('override');
+				}.observes('override'),
+
+				character : localStorage.character || '%',
+				characterChanged : function () {
+					localStorage.character = this.get('character');
+				}.observes('character'),
+
+				text : '',
+
+				linesArray : function () {
+					return this.get('text').split('\n');
+				}.property('text'),
+
+				maxLen : function () {
+					if (this.get('override')) {
+						return parseInt(this.get('override'), 10);
+					} else {
+						return this.get('linesArray').reduce(function (prev, cur) {
+							return (prev > cur.length ? prev : cur.length);
+						}, 0);
+					}
+				}.property('linesArray', 'override'),
+
+				styleA : function () {
+					var result = [];
+					var self = this;
+					var maxLen = self.get('maxLen');
+					result.push(characterRepeatedTimes(this.get('maxLen') + 2 + 2*self.get('character').length, this.get('character')));
+
+					this.get('linesArray').forEach(function (l) {
+						result.push(self.get('character') + ' ' +
+							l.slice(0, maxLen) +
+							characterRepeatedTimes(maxLen - min(maxLen, l.length) + 1, ' ') + self.get('character'));
+					});
+
+					result.push(characterRepeatedTimes(this.get('maxLen') + 4, this.get('character')));
+					return result.join('\n');
+				}.property('override', 'character', 'text'),
+
+				styleB : function () {
+
+					var result = [];
+					var self = this;
+					var maxLen = self.get('maxLen');
+					var character = self.get('character');
+
+					this.get('linesArray').forEach(function (l) {
+
+						var remainingSpaceToBeFilled = maxLen - l.length;
+						var spaceLeft = Math.round(remainingSpaceToBeFilled / 2);
+						var spaceRight = remainingSpaceToBeFilled - spaceLeft;
+
+						result.push(characterRepeatedTimes(spaceLeft + 1, character) +
+							' ' + l + ' ' +
+							characterRepeatedTimes(spaceRight + 1, character));
+					});
+					return result.join('\n');
+				}.property('override', 'character', 'text')
+			});
+		</script>
+	</body>
+</html>
