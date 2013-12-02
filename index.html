@@ -3,9 +3,6 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" type="text/css" />
-		<script src="//code.jquery.com/jquery.min.js" type="text/javascript"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/ember.js/1.1.2/ember.min.js"></script>
 		<meta name="viewport" content="width=device-width, user-scalable=no">
 		<meta name="mobile-web-app-capable" content="yes">
 		<title>CommentBox</title>
@@ -47,81 +44,9 @@
 			</div>
 		</script>
 
-		
-		<script type="text/javascript">
-			var App = Ember.Application.create();
-
-			function characterRepeatedTimes (times, char) {
-				return Array(times + 1).join(char).slice(0, times + char.length);
-			}
-
-			function min(a,b) {
-				return a < b ? a : b; 
-			}
-
-			App.ApplicationController = Ember.Controller.extend({
-				override : localStorage.override,
-				overrideChanged : function () {
-					localStorage.override = this.get('override');
-				}.observes('override'),
-
-				character : localStorage.character || '%',
-				characterChanged : function () {
-					localStorage.character = this.get('character');
-				}.observes('character'),
-
-				text : '',
-
-				linesArray : function () {
-					return this.get('text').split('\n');
-				}.property('text'),
-
-				maxLen : function () {
-					if (this.get('override')) {
-						return parseInt(this.get('override'), 10);
-					} else {
-						return this.get('linesArray').reduce(function (prev, cur) {
-							return (prev > cur.length ? prev : cur.length);
-						}, 0);
-					}
-				}.property('linesArray', 'override'),
-
-				styleA : function () {
-					var result = [];
-					var self = this;
-					var maxLen = self.get('maxLen');
-					result.push(characterRepeatedTimes(this.get('maxLen') + 2 + 2*self.get('character').length, this.get('character')));
-
-					this.get('linesArray').forEach(function (l) {
-						result.push(self.get('character') + ' ' +
-							l.slice(0, maxLen) +
-							characterRepeatedTimes(maxLen - min(maxLen, l.length) + 1, ' ') + self.get('character'));
-					});
-
-					result.push(characterRepeatedTimes(this.get('maxLen') + 4, this.get('character')));
-					return result.join('\n');
-				}.property('override', 'character', 'text'),
-
-				styleB : function () {
-
-					var result = [];
-					var self = this;
-					var maxLen = self.get('maxLen');
-					var character = self.get('character');
-
-					this.get('linesArray').forEach(function (l) {
-
-						var remainingSpaceToBeFilled = maxLen - l.length;
-						var spaceLeft = Math.round(remainingSpaceToBeFilled / 2);
-						var spaceRight = remainingSpaceToBeFilled - spaceLeft;
-
-						result.push(characterRepeatedTimes(spaceLeft + 1, character) +
-							' ' + l + ' ' +
-							characterRepeatedTimes(spaceRight + 1, character));
-					});
-					return result.join('\n');
-				}.property('override', 'character', 'text')
-			});
-		</script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/ember.js/1.1.2/ember.min.js"></script>
+		<script type="text/javascript" src="app.js"></script>
 	</body>
 </html>
