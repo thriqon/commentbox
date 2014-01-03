@@ -13,25 +13,21 @@
 				<h1>CommentBox</h1> 
 				<fieldset>
 					<legend>Parameter</legend>
-					<form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label class="col-sm-2 control-label" for="override">Width</label>
-							<div class="col-sm-10">
-								{{input class="form-control" type="number" id="override" min="0" step="1" value=override}}   
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label" for="character">Comment Character</label>
-							<div class="col-sm-10">
-								{{input class="form-control" type="text" id="character" value=character}}
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label" for="text">Comments</label>
-							<div class="col-sm-10">
-								{{textarea class="form-control" value=text id="text"}}
-							</div>
+					<form class="form" role="form">
+    					<div class="row">
+    						<div class="form-group col-xs-6">
+    							<label class="control-label" for="override">Width</label>
+    							{{input class="form-control" type="number" id="override" min="0" step="1" value=override}}   
+    						</div>
+    						<div class="form-group col-xs-6">
+    							<label class="control-label" for="character">Comment Character</label>
+    							{{input class="form-control" type="text" id="character" value=character}}
+    						</div>
+    
+    						<div class="form-group col-xs-12">
+    							<label class="control-label" for="text">Comments</label>
+    							{{textarea class="form-control" value=text id="text"}}
+    						</div>
 						</div>
 					</form>
 				</fieldset>
