@@ -19,7 +19,7 @@ or:
 Contributions
 -------------
 
-If you want to add your own style, you are most certainly welcome! Pull requests are always nice to see...
+If you want to add your own style, you are most certainly welcome! Pull requests are always nice to see... :)
 
 LICENSE
 -------
